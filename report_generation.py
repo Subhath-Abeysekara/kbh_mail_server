@@ -5,7 +5,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle ,  Paragraph
 from reportlab.lib import colors
 from datetime import datetime, timedelta
 
-from sendMail import send_mail_product, send_ml_sales
+from sendMail import send_mail_product, send_ml_sales, send_mail_all_orders
 
 page_width, page_height = letter
 num_rows = 10
@@ -108,9 +108,10 @@ def kbh_sales_report(info):
     print(f"✅ PDF created with bakery sales data: {pdf_file}")
     send_ml_sales()
 
-def kbh_order_report(data):
-    data = data['data']
-    date = data['date']
+def kbh_order_report(data_):
+    data = data_['data']
+    date = data_['date']
+    print(data)
     pdf_file = "table_kbh_order_report.pdf"
     headers = ["Order Code","Product Name", "Product Code", "Placed Date", "Pickup Date", "Delivery Status", "Amount", "Price",
                "Advance", "Contact", "Address"]
@@ -142,6 +143,7 @@ def kbh_order_report(data):
         styles["Normal"])
     doc.build([title, Spacer(1, 12), sub_header, Spacer(1, 12), table])
     print(f"✅ PDF saved successfully: {pdf_file}")
+    send_mail_all_orders()
 
 # # Run the function with example values
 # kbh_sales_report()
