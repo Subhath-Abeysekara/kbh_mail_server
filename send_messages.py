@@ -31,10 +31,10 @@ def send_message(message , contacts):
 # send_message("message" , ["0779421354"])
 
 def send_inventory_retain_sms():
-    contacts = ["0779421354"]
+    contacts = ["0779421354" , '0705071971']
     message = "Retain Stock Is Updated Successfully"
     send_message(message=message , contacts=contacts)
 
 def send_message_api_ops(message):
-    contacts = ["0779421354"]
+    contacts = ["0779421354",'0705071971']
     send_message(message=message, contacts=contacts)

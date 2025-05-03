@@ -22,7 +22,7 @@ def retain_stock_dev():
         return
 
 def retain_stock_prod():
-        url = f"https://765ip88erb.execute-api.ap-south-1.amazonaws.com/dev/v1/retain_inventory"
+        url = f"https://3vz73bk5y0.execute-api.ap-south-1.amazonaws.com/prod/v1/retain_inventory"
         validate_res = requests.put(url=url)
         print(validate_res.json())
         print("response")
