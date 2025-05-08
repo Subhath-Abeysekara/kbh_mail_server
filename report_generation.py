@@ -5,7 +5,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle ,  Paragraph
 from reportlab.lib import colors
 from datetime import datetime, timedelta
 
-from sendMail import send_mail_product, send_ml_sales, send_mail_all_orders
+from sendMail import send_mail_product, send_ml_sales, send_mail_all_orders, send_ml_hourly_sales
 
 page_width, page_height = letter
 num_rows = 10
@@ -144,6 +144,45 @@ def kbh_order_report(data_):
     doc.build([title, Spacer(1, 12), sub_header, Spacer(1, 12), table])
     print(f"✅ PDF saved successfully: {pdf_file}")
     send_mail_all_orders()
+    return
+
+def kbh_hourly_sales_report(info):
+    pdf_file = "table_kbh_hourly_sales_report.pdf"
+    header_row = ['Hour', 'Cash Income', 'Card Income','Total Income']
+    today_date = datetime.today().strftime("%d/%m/%Y")
+    data = [header_row]
+    for row in info:
+        data.append(row)
+    num_rows = len(data)
+    col_widths = [600 / len(header_row)] * len(header_row)  # Adjust column widths
+    row_heights = [30] * num_rows  # Set taller header row, standard row height
+    table = Table(data, colWidths=col_widths, rowHeights=row_heights)
+    header_color = colors.lightblue  # Light blue for headers
+    row_color_1 = colors.whitesmoke  # Light grey for alternate rows
+    row_color_2 = colors.lightgrey  # Slightly darker grey for contrast
+    style = TableStyle([
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for headers
+        ('FONTSIZE', (0, 0), (-1, -1), 10),  # Increase font size for better readability
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),  # Black text for headers
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align all cells
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),  # Extra padding for headers
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),  # Gridlines
+        ('BACKGROUND', (0, 0), (-1, 0), header_color),  # Header background color
+    ])
+    for row_idx in range(1, len(data)):
+        bg_color = row_color_1 if row_idx % 2 == 0 else row_color_2
+        style.add('BACKGROUND', (0, row_idx), (-1, row_idx), bg_color)
+    table.setStyle(style)
+    doc = SimpleDocTemplate(pdf_file, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
+    styles = getSampleStyleSheet()
+    header = Paragraph(f"Sales Report - {today_date}", styles["Title"])
+    doc.build([
+        header, Spacer(1, 12), table
+    ])
+    print(f"✅ PDF created with bakery sales data: {pdf_file}")
+    send_ml_hourly_sales()
+
+
 
 # # Run the function with example values
 # kbh_sales_report()
@@ -154,3 +193,5 @@ def kbh_order_report(data_):
 #
 # data = {'name': 'Cinnamon Roll', 'code': '010', 'period': '2025-04-01 - 2025-04-05', 'total_sales': 27, 'total_balance': 15, 'total_income': 800, 'daily_info': [['2025-04-01', 10, 10, 0, 20, 200, 0], ['2025-04-02', 10, 12, 15, 7, 600, 0]]}
 # kbh_product_report(data)
+# data = [['6-7' ,100, 500 , 300 , 800]]
+# kbh_hourly_sales_report(data)

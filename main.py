@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 from automation import automation_operation
-from report_generation import kbh_product_report, kbh_sales_report, kbh_order_report
+from report_generation import kbh_product_report, kbh_sales_report, kbh_order_report, kbh_hourly_sales_report
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from send_messages import send_message_api_ops
@@ -49,6 +49,29 @@ def get_sale_report_kbh():
             body = request.json
             print(body)
             kbh_sales_report(body['data'])
+            return {
+                'state': True,
+            }
+        else:
+            return {
+                "state": False,
+                "message": "no body"
+            }
+    except Exception as e:
+        print(str(e))
+        return {
+            "state": False,
+            "message": "error"
+        }
+
+@app.route("/report/hourly_sales", methods=["POST"])
+@cross_origin()
+def get_hourly_sale_report_kbh():
+    try:
+        if request.data:
+            body = request.json
+            print(body)
+            kbh_hourly_sales_report(body['data'])
             return {
                 'state': True,
             }

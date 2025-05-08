@@ -69,6 +69,13 @@ def send_mail_product():
 def send_ml_sales():
     body = '''Get Your Document Here
     '''
-    subject = 'ML Predicted Limits Document'
+    subject = 'Product Sales Report'
     pdfname = "table_kbh_sales_report.pdf"
+    return send_mail_pdf(body, subject, pdfname)
+
+def send_ml_hourly_sales():
+    body = '''Get Your Document Here
+    '''
+    subject = 'Hourly Sales Report'
+    pdfname = "table_kbh_hourly_sales_report.pdf"
     return send_mail_pdf(body, subject, pdfname)
